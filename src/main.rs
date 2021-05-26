@@ -1,3 +1,5 @@
+mod parser;
+
 fn main() {
-    println!("Hello, world!");
+    println!("{:?}", parser::parse("nil").1);
 }
