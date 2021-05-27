@@ -41,7 +41,7 @@ fn parse_nil<'a>(input: &'a str) -> ParseResult<'a> {
 
 fn skip_one_of(chars: &str) -> Box<dyn for<'a> Fn(&'a str) -> ParseResult<'a>> {
    let chars = String::from(chars);
-   Box::new(move |input: & str| {
+   Box::new(move |input: &str| {
       if chars.contains(&input[0..1]) {
          return ParseResult::Ok(PartialParse {
             term: Term::Empty,
@@ -53,6 +53,24 @@ fn skip_one_of(chars: &str) -> Box<dyn for<'a> Fn(&'a str) -> ParseResult<'a>> {
          msg: "no match".to_string(),
       })
    })
+}
+
+#[cfg(test)]
+mod skip_one_of_tests {
+   use super::*;
+
+   #[test]
+   fn successful_skip() {
+      let result = skip_one_of("abc")("bgh");
+      assert!(result.is_ok());
+      assert_eq!(
+         result.unwrap(),
+         PartialParse {
+            term: Term::Empty,
+            rest: "gh"
+         }
+      );
+   }
 }
 
 fn skip_whitespace(input: &str) -> &str {
@@ -67,6 +85,12 @@ mod tests {
    fn parse_nil_success() {
       let result = parse_nil("nil ");
       assert_eq!(result.is_ok(), true);
-      assert_eq!(result.unwrap(), PartialParse{ term: Term::Nil, rest: " "});
+      assert_eq!(
+         result.unwrap(),
+         PartialParse {
+            term: Term::Nil,
+            rest: " "
+         }
+      );
    }
 }
