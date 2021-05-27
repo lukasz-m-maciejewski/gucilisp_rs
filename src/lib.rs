@@ -1,1 +1,2 @@
-mod parser
+#![allow(dead_code)]
+mod parser;
